@@ -11,7 +11,7 @@ class UserModel {
     return User.findOne({_id: ObjectId(id)})
   }
   static create(newUser){
-    return User.insert(newUser)
+    return User.insertOne(newUser)
   }
   static findByIdAndUpdate(id, updatedData){
     return User.updateOne({_id: ObjectId(id)}, {

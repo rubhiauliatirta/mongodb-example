@@ -1,16 +1,33 @@
 const express = require("express")
 const app = express()
 const PORT = process.env.PORT || 3000
-const mongo = require("./config/config.js")
+const MongoClient = require('mongodb').MongoClient
+const url = 'mongodb://localhost:27017'
+const dbName = 'coba'
+const client = new MongoClient(url, {
+  useUnifiedTopology: true
+})
+const routes = require("./routes")
 
-mongo.connect(function(err){
-  if (!err) {
+client.connect((err) => {
+  if(err) {
+    console.log('Connection to mongdb failed', err)
+  } else { 
+    console.log("Successfully connect to mongodb")
+    const db = client.db(dbName)
+
     app.use(express.json())
     app.use(express.urlencoded({extended: false}))
-    app.use("/", require("./routes"))
 
-    app.listen(PORT, function(){
-      console.log("server is running on PORT " + PORT)
+    app.use((req, res, next) => {
+      req.db = db
+      next()
+    })
+
+    app.use('/', routes)
+  
+    app.listen(3000, () => {
+      console.log('Server is running on port ' + PORT)
     })
   }
 })

@@ -1,25 +1,23 @@
-const { getDatabase } = require("../config/config.js")
-const User = getDatabase().collection("users")
 const { ObjectId } = require("mongodb")
 
 class UserModel {
-  static find(){
-    return User.find().toArray()
+  static find(db){
+    return db.collection("users").find().toArray()
   }
 
-  static findById(id){
-    return User.findOne({_id: ObjectId(id)})
+  static findById(db, id){
+    return db.collection("users").findOne({_id: ObjectId(id)})
   }
-  static create(newUser){
-    return User.insert(newUser)
+  static create(db, newUser){
+    return db.collection("users").insertOne(newUser)
   }
-  static findByIdAndUpdate(id, updatedData){
-    return User.updateOne({_id: ObjectId(id)}, {
+  static findByIdAndUpdate(db, id, updatedData){
+    return db.collection("users").updateOne({_id: ObjectId(id)}, {
       $set : updatedData
     })
   }
-  static findByIdAndDelete(id){
-    return User.deleteOne({_id: ObjectId(id)})
+  static findByIdAndDelete(db, id){
+    return db.collection("users").deleteOne({_id: ObjectId(id)})
 
   }
 }
